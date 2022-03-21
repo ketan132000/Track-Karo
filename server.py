@@ -3,9 +3,21 @@ from flask import Flask, redirect, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from product import Product
+import mysql
+from flask_mysqldb import MySQL
 
 
 app = Flask(__name__)
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'mN2bFn@1'
+app.config['MYSQL_DB'] = 'track_karo'
+
+mysql = MySQL(app)
+
+
+# email='gauravsharma@gmail.com'
+# password='123456'
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -15,11 +27,22 @@ def login():
         username=userDetails['username']
         password=userDetails['password']
         print(username,password)
-        if (username!="Ketanchawla2000@gmail.com") & (password!="mN2bFn@1"):
+
+        with app.app_context():
+            cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
+            st="SELECT * FROM users WHERE email='"+username+"' AND password='"+password+"';"
+            print(st)
+            ob=cur.execute(st);
+            mysql.connection.commit()
+            cur.close()
+        print(ob)
+
+        if (ob==0):
             return render_template('invalid.html')
         else:
             return redirect('/Home')
     return render_template('login.html')
+
 @app.route('/Home', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
