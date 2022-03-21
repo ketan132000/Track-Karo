@@ -1,0 +1,93 @@
+/* body{
+  background-color: #b44593;
+}
+
+.h-100{
+  background-color: #b44593;
+} */
+
+
+/* .gradient-form
+{
+  /* border: 2px solid black;  */
+  /* background-color: #b44593;
+} */
+
+
+.col-xl-10{
+    /* position: relative; */
+    top: -40px;
+    position:relative;
+}
+.row{
+    margin-top: 0px;
+}
+
+.gradient-custom-2 {
+    /* fallback for old browsers */
+    background: #fccb90;
+  
+    /* Chrome 10-25, Safari 5.1-6 */
+    background: -webkit-linear-gradient(to right, #d8363a, #b44593);
+  
+    /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    background: linear-gradient(to right, #0d6efd, #eeeaee);
+    
+  }
+  
+  @media (min-width: 768px) {
+    .gradient-form {
+      height: 100%;
+    }
+  }
+  @media (min-width: 769px) {
+    .gradient-custom-2 {
+      border-top-right-radius: .2rem;
+      border-bottom-right-radius: .2rem;
+    }
+  }
+
+  .form-outline{
+      text-align: center;
+      font-weight: bold;
+  }
+
+  #text-p{
+      font-weight:500;
+  }
+
+  @media (min-width: 992px){}
+  .container, .container-lg, .container-md, .container-sm {
+      max-width: 960px;
+      margin-top: 50px;
+  }
+  @media (min-width: 768px){}
+  .container, .container-md, .container-sm {
+      max-width: 720px;
+  }
+  @media (min-width: 576px){}
+  .container, .container-sm {
+      max-width: 540px;
+      margin-top: 180px;
+  }
+
+  .container{
+    margin-top: 100px;
+    /* background-color: #b44593; */
+  }
+  
+
+  /* For incorrect credentials */
+  .form-label{
+    color: #f00408;
+    font-size: small;
+  }
+
+  .table{
+    text-align: center;
+    /* padding-left: 10px; */
+  }
+
+  #head{
+    font-size: large;
+  }

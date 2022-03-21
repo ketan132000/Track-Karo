@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request
+from click import password_option
+from flask import Flask, redirect, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from product import Product
@@ -8,6 +9,18 @@ app = Flask(__name__)
 
 
 @app.route('/', methods=['GET', 'POST'])
+def login():
+    if request.method == 'POST':
+        userDetails=request.form
+        username=userDetails['username']
+        password=userDetails['password']
+        print(username,password)
+        if (username!="Ketanchawla2000@gmail.com") & (password!="mN2bFn@1"):
+            return render_template('invalid.html')
+        else:
+            return redirect('/Home')
+    return render_template('login.html')
+@app.route('/Home', methods=['GET', 'POST'])
 def index():
     if request.method == 'POST':
 
@@ -20,7 +33,7 @@ def index():
         price_classes=[["div","_30jeq3 _1_WHN1"],["div","_30jeq3"],["div","_30jeq3"]]
         URL = "https://www.flipkart.com/search?q="+search
         r = requests.get(URL)
-        soup = BeautifulSoup(r.content, 'html5lib')
+        soup = BeautifulSoup(r.content, 'html.parser')
 
         for i in range(0,3):
             p=prod_classes[i]
