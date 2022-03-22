@@ -10,13 +10,14 @@ app = Flask(__name__)
 # db = yaml.load(open('db.yaml'))
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'mN2bFn@1'
-app.config['MYSQL_DB'] = 'track_karo'
+app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_DB'] = 'db_name'
 
 mysql = MySQL(app)
 
-email='gauravsharma@gmail.com'
-password='123456'
+email='dev12345@gmail.com'
+password='789670'
+
 with app.app_context():
     cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
     cur.execute("INSERT INTO users VALUE (%s, %s)", (email, password))

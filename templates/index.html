@@ -94,13 +94,31 @@
           <a href="https://www.flipkart.com{{products[i].get_link()}} ">  <img src="{{products[i].get_image()}}" class="img-fluid image" alt="Responsive image"> </a>
           <p class="text">{{products[i].get_name()}} </p>
           <p> {{products[i].get_price()}}   </p>
-          <button class="btn btncolor" type="submit" id="track">Track IT</button>
+          <button class="btn btncolor" type="submit" id="track" 
+          
+          onclick="btn_clicked('{{products[i].get_name()}}', 'https://www.flipkart.com{{products[i].get_link()}}')"
+          
+          >Track IT</button>
           
         
         </div>
         {% endfor %}
+
+
+        <form action="/addToTrack" method="POST" id="form" style="visibility:hidden;">
+          <input type="text" name="name" id="product_name">
+          <input type="text" name="link" id="product_link">
+        </form>
     
     </div>
 
+
+<script>
+  function btn_clicked(name, link){
+    document.getElementById("product_name").value = name;
+    document.getElementById("product_link").value = link;
+    document.getElementById("form").submit();
+  }
+</script>
 </body>
 </html>

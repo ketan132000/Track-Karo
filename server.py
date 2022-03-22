@@ -10,8 +10,8 @@ from flask_mysqldb import MySQL
 app = Flask(__name__)
 app.config['MYSQL_HOST'] = 'localhost'
 app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'mN2bFn@1'
-app.config['MYSQL_DB'] = 'track_karo'
+app.config['MYSQL_PASSWORD'] = 'password'
+app.config['MYSQL_DB'] = 'db_name'
 
 mysql = MySQL(app)
 
@@ -80,6 +80,24 @@ def index():
                 return render_template('index.html', len=n ,products=final_product)
     return render_template('index.html', len=0)
 
+
+@app.route('/addToTrack', methods=['GET', 'POST'])
+def add():
+    if request.method == 'POST':
+
+        details = request.form
+        name = details["name"]
+        link = details["link"]
+
+        with app.app_context():
+            cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
+            st="Insert into products Value ('"+name[:10]+"', '"+link[:10]+"');"
+            print(st)
+            ob=cur.execute(st);
+            mysql.connection.commit()
+            cur.close()
+
+    return render_template('index.html', len=0)
 
 if __name__ == '__main__':
     app.run(debug=True)
