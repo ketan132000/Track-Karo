@@ -1,23 +1,26 @@
-from click import password_option
 from flask import Flask, redirect, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from product import Product
+import sqlite3
 import mysql
-from flask_mysqldb import MySQL
+
 
 
 app = Flask(__name__)
-app.config['MYSQL_HOST'] = 'localhost'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'password'
-app.config['MYSQL_DB'] = 'db_name'
+conn = sqlite3.connect('product.db')
+print ("Opened database successfully");
 
-mysql = MySQL(app)
+conn.execute('insert into users  values ("ketanchawla@gmail.com", "123456", "Ketan");')
+print (conn.execute('SELECT * FROM users;').fetchall());
+conn.close()
+
 
 
 # email='gauravsharma@gmail.com'
 # password='123456'
+
+
 
 
 @app.route('/', methods=['GET', 'POST'])
