@@ -1,26 +1,23 @@
+from click import password_option
 from flask import Flask, redirect, render_template, request
 import requests
 from bs4 import BeautifulSoup
 from product import Product
-import sqlite3
 import mysql
-
+from flask_mysqldb import MySQL
 
 
 app = Flask(__name__)
-conn = sqlite3.connect('product.db')
-print ("Opened database successfully");
+app.config['MYSQL_HOST'] = 'localhost'
+app.config['MYSQL_USER'] = 'root'
+app.config['MYSQL_PASSWORD'] = 'mN2bFn@1'
+app.config['MYSQL_DB'] = 'trackkaro'
 
-conn.execute('insert into users  values ("ketanchawla@gmail.com", "123456", "Ketan");')
-print (conn.execute('SELECT * FROM users;').fetchall());
-conn.close()
-
+mysql = MySQL(app)
 
 
 # email='gauravsharma@gmail.com'
 # password='123456'
-
-
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -94,13 +91,23 @@ def add():
 
         with app.app_context():
             cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
-            st="Insert into products Value ('"+name[:10]+"', '"+link[:10]+"');"
+            st="Insert into products Value ('ketanchawla2000@gmail.com','"+link+"','"+name+"');"
             print(st)
             ob=cur.execute(st);
             mysql.connection.commit()
             cur.close()
 
-    return render_template('index.html', len=0)
+        with app.app_context():
+            cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
+            st="SELECT name FROM products;"
+            # print(st)
+            cur.execute(st)
+            ob=cur.fetchall()
+            print(ob)
+            mysql.connection.commit()
+            cur.close()
+
+    return render_template('track.html', len=len(ob), trackitem=ob)
 
 if __name__ == '__main__':
     app.run(debug=True)
