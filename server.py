@@ -16,10 +16,6 @@ app.config['MYSQL_DB'] = 'trackkaro'
 mysql = MySQL(app)
 
 
-# email='gauravsharma@gmail.com'
-# password='123456'
-
-
 @app.route('/', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -85,29 +81,47 @@ def index():
 def add():
     if request.method == 'POST':
 
+        print(request.method)
+
         details = request.form
         name = details["name"]
         link = details["link"]
-
+        
+        print(name+"HELLO")
+        
+                    
         with app.app_context():
-            cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
+            cur = mysql.connection.cursor() 
+            st1="SELECT name FROM products;"
+            cur.execute(st1)
+            ob1=cur.fetchall()
+            for i in ob1:
+                if(name==i[0]):
+                     return redirect('/addToTrack')
             st="Insert into products Value ('ketanchawla2000@gmail.com','"+link+"','"+name+"');"
-            print(st)
+            # print(st)
             ob=cur.execute(st);
             mysql.connection.commit()
             cur.close()
 
-        with app.app_context():
+       
+
+        return redirect('/addToTrack')
+    
+    if request.method=='GET':
+
+         # USED TO ACCESS DATABASE QUERIES IN SQL.
+         with app.app_context():
             cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
             st="SELECT name FROM products;"
-            # print(st)
             cur.execute(st)
             ob=cur.fetchall()
-            print(ob)
             mysql.connection.commit()
             cur.close()
 
-    return render_template('track.html', len=len(ob), trackitem=ob)
+         return render_template('track.html', len=len(ob), trackitem=ob)
+        
+
 
 if __name__ == '__main__':
     app.run(debug=True)
