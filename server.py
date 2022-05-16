@@ -104,7 +104,7 @@ def add():
             s.login("ketankay07@gmail.com", "kanikachawla")
   
             # message to be sent
-            message = name+" is available in your budget."
+            message = name+" is available in your budget.\n Buy now from this link: "+link
   
             # sending the mail
             s.sendmail("ketankay07@gmail.com", "gaurav.sharma0865@gmail.com", message)
