@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 from product import Product
 import mysql
 from flask_mysqldb import MySQL
+import smtplib
 
 
 app = Flask(__name__)
@@ -80,16 +81,38 @@ def index():
 @app.route('/addToTrack', methods=['GET', 'POST'])
 def add():
     if request.method == 'POST':
-
-        print(request.method)
-
         details = request.form
+        # print(details["budget"])
         name = details["name"]
         link = details["link"]
-        
-        print(name+"HELLO")
-        
-                    
+        image=details['image']
+        budget=details["budget"]
+        price=details["price"]
+        price=price.replace(',','')
+        price=price.replace('₹','')
+        if budget =='':
+            budget='0'
+        if int(price)<= int(budget):
+            
+            # creates SMTP session
+            s = smtplib.SMTP('smtp.gmail.com', 587)
+  
+            # start TLS for security
+            s.starttls()
+  
+            # Authentication
+            s.login("ketankay07@gmail.com", "kanikachawla")
+  
+            # message to be sent
+            message = name+" is available in your budget."
+  
+            # sending the mail
+            s.sendmail("ketankay07@gmail.com", "gaurav.sharma0865@gmail.com", message)
+  
+            # terminating the session
+            s.quit()
+            return redirect('/addToTrack')
+                       
         with app.app_context():
             cur = mysql.connection.cursor() 
             st1="SELECT name FROM products;"
@@ -97,10 +120,11 @@ def add():
             ob1=cur.fetchall()
             for i in ob1:
                 if(name==i[0]):
-                     return redirect('/addToTrack')
-            st="Insert into products Value ('ketanchawla2000@gmail.com','"+link+"','"+name+"');"
+                     return redirect('/addToTrack')       
+            st="Insert into products Value ('ketanchawla2000@gmail.com','"+link+"','"+name+"','"+image+"','"+budget+"');"
             # print(st)
-            ob=cur.execute(st);
+            cur.execute(st);
+            ob=cur.fetchall()
             mysql.connection.commit()
             cur.close()
 
@@ -111,16 +135,59 @@ def add():
     if request.method=='GET':
 
          # USED TO ACCESS DATABASE QUERIES IN SQL.
+
+
          with app.app_context():
             cur = mysql.connection.cursor()  # USED TO ACCESS DATABASE QUERIES IN SQL.
-            st="SELECT name FROM products;"
+            st="SELECT name,image,link,budget FROM products;"
             cur.execute(st)
             ob=cur.fetchall()
+            final_price=[]
+            for i in ob:
+                url_links=[i[2]]
+               
+                for j in url_links:
+                    print(j)
+                    URLL = j
+                    r = requests.get(URLL)
+                    soupp = BeautifulSoup(r.content, 'html.parser')
+                    pricelist = soupp.findAll(attrs={'class':"_16Jk6d"})
+                    str=pricelist[0].text
+                    str=str[1:]
+                    final_price.append(str)
+            print(final_price)
             mysql.connection.commit()
             cur.close()
 
-         return render_template('track.html', len=len(ob), trackitem=ob)
+
+         return render_template('track.html', len=len(ob), trackitem=ob, price=final_price)
         
+
+@app.route('/remove', methods=['GET', 'POST'])
+def remove():
+    if request.method == 'POST':
+        details = request.form
+        name=details["prod_name"]
+        with app.app_context():
+            cur = mysql.connection.cursor() 
+            st1="DELETE FROM PRODUCTS WHERE name='"+name+"';"
+            cur.execute(st1)
+            ob=cur.fetchall()
+            mysql.connection.commit()
+            cur.close()
+        return redirect('/addToTrack')
+
+@app.route('/remove_all', methods=['GET', 'POST'])
+def remove_all():
+    if request.method == 'POST':
+        with app.app_context():
+            cur = mysql.connection.cursor() 
+            st1="DELETE FROM PRODUCTS;"
+            cur.execute(st1)
+            ob=cur.fetchall()
+            mysql.connection.commit()
+            cur.close()
+        return redirect('/addToTrack')
 
 
 if __name__ == '__main__':
